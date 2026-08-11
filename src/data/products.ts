@@ -870,10 +870,10 @@ export const products: Product[] = [
     "title": "Kasavu Grace",
     "category": "Wedding",
     "price": 2650,
-    "image": "/images/KASAVU GRACE/1.png",
+    "image": "/images/KASAVU GRACE/1.jpg",
     "gallery": [
-      "/images/KASAVU GRACE/1.png",
-      "/images/KASAVU GRACE/2.png",
+      "/images/KASAVU GRACE/1.jpg",
+      "/images/KASAVU GRACE/2.jpg",
       "/images/KASAVU GRACE/4.jpg",
       "/images/KASAVU GRACE/5.jpg",
       "/images/KASAVU GRACE/6.jpg"
@@ -890,10 +890,10 @@ export const products: Product[] = [
     "title": "Kraft and Cream",
     "category": "Wedding",
     "price": 1000,
-    "image": "/images/Kraft and cream/1.png",
+    "image": "/images/Kraft and cream/1.jpg",
     "gallery": [
-      "/images/Kraft and cream/1.png",
-      "/images/Kraft and cream/2.png"
+      "/images/Kraft and cream/1.jpg",
+      "/images/Kraft and cream/2.jpg"
     ],
     "description": "A beautiful Kraft and Cream invitation card.",
     "details": {
@@ -907,10 +907,10 @@ export const products: Product[] = [
     "title": "Kraft and Cream",
     "category": "Wedding",
     "price": 2200,
-    "image": "/images/Kraft and cream/1.png",
+    "image": "/images/Kraft and cream/1.jpg",
     "gallery": [
-      "/images/Kraft and cream/1.png",
-      "/images/Kraft and cream/2.png"
+      "/images/Kraft and cream/1.jpg",
+      "/images/Kraft and cream/2.jpg"
     ],
     "description": "A beautiful Kraft and Cream invitation card.",
     "details": {
@@ -924,10 +924,10 @@ export const products: Product[] = [
     "title": "Kraft and Cream",
     "category": "Wedding",
     "price": 2300,
-    "image": "/images/Kraft and cream/1.png",
+    "image": "/images/Kraft and cream/1.jpg",
     "gallery": [
-      "/images/Kraft and cream/1.png",
-      "/images/Kraft and cream/2.png"
+      "/images/Kraft and cream/1.jpg",
+      "/images/Kraft and cream/2.jpg"
     ],
     "description": "A beautiful Kraft and Cream invitation card.",
     "details": {
@@ -1706,13 +1706,13 @@ export const products: Product[] = [
     "title": "Shubhamangalya",
     "category": "Wedding",
     "price": 2850,
-    "image": "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.png",
+    "image": "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.jpg",
     "gallery": [
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 2.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 3.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 4.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 5.png"
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 2.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 3.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 4.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 5.jpg"
     ],
     "description": "A beautiful Shubhamangalya invitation card.",
     "details": {
@@ -1726,13 +1726,13 @@ export const products: Product[] = [
     "title": "Shubhamangalya",
     "category": "Wedding",
     "price": 11000,
-    "image": "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.png",
+    "image": "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.jpg",
     "gallery": [
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 2.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 3.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 4.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 5.png"
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 2.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 3.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 4.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 5.jpg"
     ],
     "description": "A beautiful Shubhamangalya invitation card.",
     "details": {
@@ -1746,13 +1746,13 @@ export const products: Product[] = [
     "title": "Shubhamangalya",
     "category": "Wedding",
     "price": 2850,
-    "image": "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.png",
+    "image": "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.jpg",
     "gallery": [
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 2.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 3.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 4.png",
-      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 5.png"
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 1.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 2.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 3.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 4.jpg",
+      "/images/SHUBHAMANGALYA/SHUBHAMANGALYA 5.jpg"
     ],
     "description": "A beautiful Shubhamangalya invitation card.",
     "details": {
@@ -2168,8 +2168,8 @@ export const products: Product[] = [
     "image": "/images/WILLOW1.png",
     "gallery": [
       "/images/WILLOW1.png",
-      "/images/WILLOW2.png",
-      "/images/WILLOW3.png"
+      "/images/WILLOW2.jpg",
+      "/images/WILLOW3.jpg"
     ],
     "description": "A beautiful Willow invitation card.",
     "details": {
