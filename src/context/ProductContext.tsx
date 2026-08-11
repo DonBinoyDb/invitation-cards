@@ -35,34 +35,27 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     
     if (error) {
       console.error("Failed to fetch products", error);
+      // Fallback to initial products if DB fails
+      setProductsList([...initialProducts]);
       return;
     }
 
-    if (data && data.length === 0) {
-      console.log("Database is empty. Seeding initial products...");
-      // Seed the database with initial products
-      for (const p of initialProducts) {
-        // Ensure category exists first
-        await supabase.from('categories').insert({ name: p.category });
-        
-        await supabase.from('products').insert({
-          id: p.id,
-          title: p.title,
-          category: p.category,
-          price: p.price,
-          image: p.image,
-          gallery: p.gallery,
-          description: p.description,
-          details: p.details,
-          hidden: p.hidden || false
-        });
+    const dbProducts = (data || []) as Product[];
+    
+    // Merge hardcoded initialProducts with dbProducts
+    // dbProducts override initialProducts if they have the same ID
+    const mergedProducts = [...initialProducts];
+    
+    for (const dbP of dbProducts) {
+      const index = mergedProducts.findIndex(p => p.id === dbP.id);
+      if (index !== -1) {
+         mergedProducts[index] = dbP; // Override hardcoded with DB version
+      } else {
+         mergedProducts.unshift(dbP); // New product from DB, add to top
       }
-      // Re-fetch after seeding
-      const reFetch = await supabase.from('products').select('*');
-      if (reFetch.data) setProductsList(reFetch.data as Product[]);
-    } else {
-      setProductsList(data as Product[]);
     }
+    
+    setProductsList(mergedProducts);
   };
 
   useEffect(() => {
@@ -98,10 +91,27 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const updateProduct = async (id: string, updates: Partial<Product>) => {
-    // Optimistic UI update
-    setProductsList(prev => prev.map(p => p.id === id ? { ...p, ...updates } : p));
+    const existingProduct = productsList.find(p => p.id === id);
+    if (!existingProduct) return;
     
-    const { error } = await supabase.from('products').update(updates).eq('id', id);
+    const updatedProduct = { ...existingProduct, ...updates };
+
+    // Optimistic UI update
+    setProductsList(prev => prev.map(p => p.id === id ? updatedProduct : p));
+    
+    // Upsert to DB: If it's a hardcoded product being edited for the first time, it inserts. Otherwise updates.
+    const { error } = await supabase.from('products').upsert({
+      id: updatedProduct.id,
+      title: updatedProduct.title,
+      category: updatedProduct.category,
+      price: updatedProduct.price,
+      image: updatedProduct.image,
+      gallery: updatedProduct.gallery,
+      description: updatedProduct.description,
+      details: updatedProduct.details,
+      hidden: updatedProduct.hidden || false
+    });
+
     if (error) {
       console.error("Failed to update product", error);
       await fetchProducts(); // Revert on failure
@@ -113,11 +123,24 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!product) return;
     
     const newHiddenStatus = !product.hidden;
+    const updatedProduct = { ...product, hidden: newHiddenStatus };
     
     // Optimistic UI update
-    setProductsList(prev => prev.map(p => p.id === id ? { ...p, hidden: newHiddenStatus } : p));
+    setProductsList(prev => prev.map(p => p.id === id ? updatedProduct : p));
 
-    const { error } = await supabase.from('products').update({ hidden: newHiddenStatus }).eq('id', id);
+    // Upsert to ensure hardcoded products can be hidden and saved to DB
+    const { error } = await supabase.from('products').upsert({
+      id: updatedProduct.id,
+      title: updatedProduct.title,
+      category: updatedProduct.category,
+      price: updatedProduct.price,
+      image: updatedProduct.image,
+      gallery: updatedProduct.gallery,
+      description: updatedProduct.description,
+      details: updatedProduct.details,
+      hidden: updatedProduct.hidden
+    });
+
     if (error) {
       console.error("Failed to toggle visibility", error);
       await fetchProducts(); // Revert on failure
