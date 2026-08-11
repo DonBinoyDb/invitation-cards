@@ -15,7 +15,7 @@ const Navbar = () => {
   return (
     <nav className="absolute top-0 w-full z-50 py-5 md:py-0 md:pt-10 px-6 md:px-16 flex justify-between items-center bg-white md:bg-transparent mix-blend-normal md:mix-blend-difference text-brand-dark md:text-white shadow-sm md:shadow-none">
       <Link to="/" className="text-3xl md:text-4xl hover:opacity-70 transition-opacity relative z-50" style={{ fontFamily: "'Great Vibes', cursive" }}>
-        Ivory Script Estate
+        Kalyanakath
       </Link>
       
       {/* Desktop Menu */}

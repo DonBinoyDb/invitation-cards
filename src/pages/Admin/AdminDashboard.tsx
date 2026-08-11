@@ -42,7 +42,7 @@ const AdminDashboard = () => {
               <ArrowLeft size={14} /> Back to Website
             </Link>
             <h2 className="text-2xl font-black uppercase tracking-tight text-white leading-none">
-              Ivory Script
+              Kalyanakath
             </h2>
             <p className="text-xs text-brand-gold mt-2 font-bold tracking-widest uppercase">Admin Portal</p>
           </div>

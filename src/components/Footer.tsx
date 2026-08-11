@@ -17,7 +17,7 @@ const Footer = () => {
             className="text-6xl md:text-7xl lg:text-[7rem] text-brand-gold mb-6 leading-none font-light"
             style={{ fontFamily: "'Great Vibes', cursive" }}
           >
-            Ivory Script Estate
+            Kalyanakath
           </h2>
           <p className="text-[9px] md:text-[11px] tracking-[0.4em] uppercase text-white/50 font-medium">
             Bespoke Invitations & Fine Stationery
@@ -57,7 +57,7 @@ const Footer = () => {
         
         {/* Bottom */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] tracking-[0.3em] uppercase text-white/30 pt-4">
-          <p>&copy; {new Date().getFullYear()} IVORY SCRIPT ESTATE. ALL RIGHTS RESERVED.</p>
+          <p>&copy; {new Date().getFullYear()} KALYANAKATH. ALL RIGHTS RESERVED.</p>
           <div className="flex gap-8">
             <a href="#" className="hover:text-brand-gold transition-colors duration-300">Privacy Policy</a>
             <a href="#" className="hover:text-brand-gold transition-colors duration-300">Terms of Service</a>

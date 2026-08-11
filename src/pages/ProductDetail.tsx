@@ -46,7 +46,7 @@ const ProductDetail = () => {
   }
 
   const similarProducts = productsList.filter(p => p.category === product.category && p.id !== product.id && !p.hidden).slice(0, 4);
-  const whatsappMessage = `Hi Ivory Script Estate. I am interested in the "${product.title}" (Quantity: ${quantity}).`;
+  const whatsappMessage = `Hi Kalyanakath. I am interested in the "${product.title}" (Quantity: ${quantity}).`;
 
   return (
     <div className="bg-brand-light min-h-screen animate-fade-in pt-32 pb-24 px-6 md:px-12">
