@@ -10,29 +10,30 @@ interface ProductCardProps {
 
 const ProductCard = ({ id, title, price, image, category }: ProductCardProps) => {
   return (
-    <Link to={`/card/${id}`} className="group block w-full">
-      <div className="relative aspect-[3/4] overflow-hidden mb-6 bg-[#f0f0f0]">
+    <div className="group block w-full relative">
+      <Link to={`/card/${id}`} className="block relative overflow-hidden rounded-md bg-[#F4F4F5] aspect-[4/5] mb-4">
         <img 
           src={image} 
           alt={title} 
-          className="w-full h-full object-cover transform transition-transform duration-[2000ms] ease-out group-hover:scale-105 filter grayscale-[20%] group-hover:grayscale-0"
+          className="w-full h-full object-cover p-6 transform transition-transform duration-500 group-hover:scale-105"
         />
-      </div>
+        
+      </Link>
       
-      <div className="flex justify-between items-start">
-        <div>
-          <p className="text-[9px] tracking-[0.3em] uppercase text-brand-dark/50 mb-3 font-medium">
-            {category}
-          </p>
-          <h3 className="font-serif text-lg text-brand-dark group-hover:text-brand-gold transition-colors duration-500 font-light">
+      <div className="text-left">
+        <p className="text-[10px] tracking-wider uppercase text-gray-500 mb-1 font-semibold">
+          {category}
+        </p>
+        <Link to={`/card/${id}`}>
+          <h3 className="font-sans font-bold text-[15px] text-brand-dark hover:text-black mb-1 truncate">
             {title}
           </h3>
-        </div>
-        <p className="text-brand-dark/90 font-sans text-sm font-medium mt-4 tracking-widest">
+        </Link>
+        <p className="text-brand-dark font-medium text-[14px]">
           ₹{price}
         </p>
       </div>
-    </Link>
+    </div>
   );
 };
 

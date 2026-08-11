@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@200;300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
   --color-brand-gold: #B89745;
-  --color-brand-dark: #050505;
-  --color-brand-light: #FAFAFA;
+  --color-brand-dark: #111111;
+  --color-brand-light: #FDFBF7;
   --font-serif: "Cormorant Garamond", serif;
-  --font-sans: "Outfit", sans-serif;
+  --font-sans: "Montserrat", sans-serif;
 }
 
 body {
@@ -22,29 +22,42 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes fadeInReveal {
-  0% { opacity: 0; transform: translateY(10px); }
+  0% { opacity: 0; transform: translateY(15px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
 .animate-fade-in {
-  animation: fadeInReveal 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fadeInReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   opacity: 0;
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  display: flex;
+  width: max-content;
 }
 
 .delay-100 { animation-delay: 100ms; }
 .delay-300 { animation-delay: 300ms; }
 .delay-500 { animation-delay: 500ms; }
 .delay-700 { animation-delay: 700ms; }
+.delay-1000 { animation-delay: 1000ms; }
 
-/* Custom ultra-thin scrollbar for premium feel */
+/* Custom thin scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.15);
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0,0,0,0.3);

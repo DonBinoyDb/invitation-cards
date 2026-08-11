@@ -4,22 +4,37 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
 import Collections from './pages/Collections';
+import Contact from './pages/Contact';
+import SignIn from './pages/SignIn';
+import AdminDashboard from './pages/Admin/AdminDashboard';
+import { AuthProvider } from './context/AuthContext';
+import { ProductProvider } from './context/ProductContext';
+import { CMSProvider } from './context/CMSContext';
 
 function App() {
   return (
-    <Router>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/collections" element={<Collections />} />
-            <Route path="/card/:id" element={<ProductDetail />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+    <AuthProvider>
+      <ProductProvider>
+        <CMSProvider>
+          <Router>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/collections" element={<Collections />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/card/:id" element={<ProductDetail />} />
+                  <Route path="/signin" element={<SignIn />} />
+                  <Route path="/admin/*" element={<AdminDashboard />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </CMSProvider>
+      </ProductProvider>
+    </AuthProvider>
   );
 }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { products } from '../data/products';
+import { useProducts } from '../context/ProductContext';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ProductCard from '../components/ProductCard';
 import { Plus, Minus, ChevronLeft } from 'lucide-react';
@@ -25,8 +25,10 @@ const Accordion = ({ title, content }: { title: string, content: string }) => {
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const product = products.find(p => p.id === id);
+  const { productsList } = useProducts();
+  const product = productsList.find(p => p.id === id);
   const [activeImage, setActiveImage] = useState(0);
+  const [quantity, setQuantity] = useState(100);
   
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -43,8 +45,8 @@ const ProductDetail = () => {
     );
   }
 
-  const similarProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
-  const whatsappMessage = `Hi Vedha Cards. I am interested in the "${product.title}".`;
+  const similarProducts = productsList.filter(p => p.category === product.category && p.id !== product.id && !p.hidden).slice(0, 4);
+  const whatsappMessage = `Hi Ivory Script Estate. I am interested in the "${product.title}" (Quantity: ${quantity}).`;
 
   return (
     <div className="bg-brand-light min-h-screen animate-fade-in pt-32 pb-24 px-6 md:px-12">
@@ -95,6 +97,27 @@ const ProductDetail = () => {
                   ₹{product.price}
                 </p>
                 <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-brand-dark/50 border border-brand-dark/20 px-3 py-1 rounded-full">Base Package</span>
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <label htmlFor="quantity" className="block text-[10px] uppercase tracking-[0.2em] text-brand-dark/70 font-medium mb-3">
+                Select Quantity
+              </label>
+              <div className="relative">
+                <select 
+                  id="quantity" 
+                  value={quantity} 
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="w-full bg-transparent border border-brand-dark/20 text-brand-dark text-sm py-4 px-4 rounded-sm appearance-none focus:outline-none focus:border-brand-dark transition-colors"
+                >
+                  {Array.from({ length: 20 }, (_, i) => (i + 1) * 50).map(q => (
+                    <option key={q} value={q}>{q} pieces</option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-brand-dark/50">
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
               </div>
             </div>
 
