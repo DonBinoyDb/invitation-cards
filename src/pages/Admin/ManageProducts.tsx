@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useProducts } from '../../context/ProductContext';
 import type { Product } from '../../data/products';
+import { products as initialProducts } from '../../data/products';
 import { compressImage } from '../../utils/imageCompressor';
 import { Plus, X, Upload, Box, DollarSign, Tag, Search, FileText, Package, Eye, EyeOff, Edit, Trash2, Layers, AlertCircle } from 'lucide-react';
 
 const ManageProducts = () => {
-  const { productsList, categories, addProduct, updateProduct, toggleVisibility, addCategory, removeCategory } = useProducts();
+  const { productsList, categories, addProduct, updateProduct, toggleVisibility, deleteProduct, addCategory, removeCategory } = useProducts();
   const [isAdding, setIsAdding] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   
   // Form State
@@ -102,6 +104,22 @@ const ManageProducts = () => {
 
   const removeGalleryImage = (index: number) => {
     setGallery(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setProductToDelete(id);
+  };
+
+  const confirmDelete = () => {
+    if (productToDelete) {
+      deleteProduct(productToDelete);
+      setProductToDelete(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setProductToDelete(null);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -327,13 +345,29 @@ const ManageProducts = () => {
                 </div>
               </div>
               </div>
-              <div className="bg-gray-50 px-8 py-5 border-t border-gray-100 flex justify-end gap-4 sticky bottom-0 z-10">
-                <button type="button" onClick={closeForm} className="px-6 py-3 font-bold text-xs uppercase tracking-widest text-gray-500 hover:text-gray-800 transition-colors">
-                  Cancel
-                </button>
-                <button type="submit" className="bg-brand-dark text-white font-bold text-xs px-8 py-3 uppercase tracking-widest hover:bg-black transition-colors rounded-lg shadow-md flex items-center gap-2">
-                  {editingProductId ? <><Edit size={16}/> Save Changes</> : <><Plus size={16} /> Save Product</>}
-                </button>
+              <div className="bg-gray-50 px-8 py-5 border-t border-gray-100 flex justify-between items-center sticky bottom-0 z-10">
+                <div>
+                  {editingProductId && !initialProducts.some(p => p.id === editingProductId) && (
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        closeForm();
+                        setProductToDelete(editingProductId);
+                      }} 
+                      className="px-6 py-3 font-bold text-xs uppercase tracking-widest text-red-500 hover:text-red-700 transition-colors flex items-center gap-2"
+                    >
+                      <Trash2 size={16} /> Delete Product
+                    </button>
+                  )}
+                </div>
+                <div className="flex gap-4">
+                  <button type="button" onClick={closeForm} className="px-6 py-3 font-bold text-xs uppercase tracking-widest text-gray-500 hover:text-gray-800 transition-colors">
+                    Cancel
+                  </button>
+                  <button type="submit" className="bg-brand-dark text-white font-bold text-xs px-8 py-3 uppercase tracking-widest hover:bg-black transition-colors rounded-lg shadow-md flex items-center gap-2">
+                    {editingProductId ? <><Edit size={16}/> Save Changes</> : <><Plus size={16} /> Save Product</>}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
@@ -364,6 +398,16 @@ const ManageProducts = () => {
                   >
                     {product.hidden ? <EyeOff size={14} /> : <Eye size={14} />}
                   </button>
+                  
+                  {!initialProducts.some(p => p.id === product.id) && (
+                    <button 
+                      onClick={(e) => handleDeleteClick(e, product.id)}
+                      className="p-2 rounded-full shadow-md backdrop-blur-sm transition-all bg-white/90 text-red-500 hover:text-white hover:bg-red-500"
+                      title="Delete Product"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  )}
                 </div>
 
                 {/* Edit Click Target */}
@@ -394,6 +438,35 @@ const ManageProducts = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {productToDelete && (
+        <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-sm w-full rounded-2xl shadow-2xl p-8 animate-fade-in-up text-center">
+            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle size={32} />
+            </div>
+            <h3 className="text-xl font-black text-gray-800 mb-2">Delete Product</h3>
+            <p className="text-sm text-gray-500 mb-8">
+              Are you sure you want to delete this product? This action cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={cancelDelete}
+                className="flex-1 px-4 py-3 font-bold text-xs uppercase tracking-widest bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDelete}
+                className="flex-1 px-4 py-3 font-bold text-xs uppercase tracking-widest bg-red-500 text-white hover:bg-red-600 rounded-lg transition-colors shadow-md"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
