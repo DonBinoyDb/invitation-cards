@@ -9,6 +9,7 @@ interface ProductContextType {
   addProduct: (product: Product) => Promise<void>;
   updateProduct: (id: string, updates: Partial<Product>) => Promise<void>;
   toggleVisibility: (id: string) => Promise<void>;
+  deleteProduct: (id: string) => Promise<void>;
   addCategory: (category: string) => Promise<void>;
   removeCategory: (category: string) => Promise<void>;
   isLoading: boolean;
@@ -147,6 +148,23 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
+  const deleteProduct = async (id: string) => {
+    const isHardcoded = initialProducts.some(p => p.id === id);
+    if (isHardcoded) {
+      console.error("Cannot delete a hardcoded product.");
+      return;
+    }
+    
+    // Optimistic UI update
+    setProductsList(prev => prev.filter(p => p.id !== id));
+
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) {
+      console.error("Failed to delete product", error);
+      await fetchProducts(); // Revert on failure
+    }
+  };
+
   const addCategory = async (category: string) => {
     if (categories.includes(category)) return;
 
@@ -172,7 +190,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   return (
-    <ProductContext.Provider value={{ productsList, categories, addProduct, updateProduct, toggleVisibility, addCategory, removeCategory, isLoading }}>
+    <ProductContext.Provider value={{ productsList, categories, addProduct, updateProduct, toggleVisibility, deleteProduct, addCategory, removeCategory, isLoading }}>
       {children}
     </ProductContext.Provider>
   );
