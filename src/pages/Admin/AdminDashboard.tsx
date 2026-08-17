@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, Package, MonitorPlay, LogOut, ArrowLeft, Menu, X } from 'lucide-react';
+import { Package, MonitorPlay, LogOut, ArrowLeft, Menu, X } from 'lucide-react';
 import ManageProducts from './ManageProducts';
 import ManageLandingPage from './ManageLandingPage';
 
@@ -98,15 +98,7 @@ const AdminDashboard = () => {
         <div className="flex-1 overflow-y-auto p-4 lg:p-10 bg-[#f8f9fa]">
           <div className="max-w-6xl mx-auto">
             <Routes>
-              <Route path="/" element={
-                <div className="bg-white p-8 lg:p-12 shadow-sm rounded-xl border border-gray-100 flex flex-col items-center justify-center text-center min-h-[300px] lg:min-h-[400px]">
-                  <div className="w-16 h-16 lg:w-20 lg:h-20 bg-brand-dark/5 rounded-full flex items-center justify-center mb-6">
-                    <LayoutDashboard size={32} className="text-brand-dark lg:w-10 lg:h-10" />
-                  </div>
-                  <h3 className="text-2xl lg:text-3xl font-black uppercase text-brand-dark mb-4 tracking-tight">Welcome to the Admin Portal</h3>
-                  <p className="text-sm lg:text-base text-gray-500 max-w-md">Select a management tool from the sidebar to begin editing your store's content and inventory.</p>
-                </div>
-              } />
+              <Route path="/" element={<Navigate to="/admin/products" replace />} />
               <Route path="/products" element={<ManageProducts />} />
               <Route path="/landing" element={<ManageLandingPage />} />
             </Routes>
