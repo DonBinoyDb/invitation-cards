@@ -42,6 +42,15 @@ const Collections = () => {
     setCurrentPage(1);
   }, [searchQuery, selectedCategory]);
 
+  // Ensure page always starts at top when loaded
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    // Safari/Mobile fallback
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 50);
+  }, []);
+
   const displayCategories = ['All Categories', ...categories];
 
   return (
