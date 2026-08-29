@@ -28,7 +28,8 @@ const ProductDetail = () => {
   const { productsList } = useProducts();
   const product = productsList.find(p => p.id === id);
   const [activeImage, setActiveImage] = useState(0);
-  const [quantity, setQuantity] = useState(100);
+  const [quantity, setQuantity] = useState<number | ''>(50);
+  const [showError, setShowError] = useState(false);
   
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -94,23 +95,37 @@ const ProductDetail = () => {
               
               <div className="flex items-center gap-4 border-b border-brand-dark/10 pb-8">
                 <p className="text-2xl text-brand-dark font-sans font-medium tracking-wide">
-                  ₹{product.price}
+                  {quantity ? `₹${(product.price / 50) * Number(quantity)}` : '₹--'}
                 </p>
-                <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-brand-dark/50 border border-brand-dark/20 px-3 py-1 rounded-full">Base Package</span>
+                <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-brand-dark/50 border border-brand-dark/20 px-3 py-1 rounded-full">Total Price</span>
               </div>
             </div>
 
             <div className="mb-8">
-              <label htmlFor="quantity" className="block text-[10px] uppercase tracking-[0.2em] text-brand-dark/70 font-medium mb-3">
-                Select Quantity
-              </label>
+              <div className="flex justify-between items-center mb-3">
+                <label htmlFor="quantity" className="block text-[10px] uppercase tracking-[0.2em] text-brand-dark/70 font-medium">
+                  Select Quantity
+                </label>
+                {quantity !== '' && (
+                  <button 
+                    onClick={() => { setQuantity(''); setShowError(false); }} 
+                    className="text-[10px] uppercase tracking-[0.1em] text-red-500 hover:text-red-700 transition-colors font-medium"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
               <div className="relative">
                 <select 
                   id="quantity" 
                   value={quantity} 
-                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  onChange={(e) => {
+                    setQuantity(e.target.value === '' ? '' : Number(e.target.value));
+                    setShowError(false);
+                  }}
                   className="w-full bg-transparent border border-brand-dark/20 text-brand-dark text-sm py-4 px-4 rounded-sm appearance-none focus:outline-none focus:border-brand-dark transition-colors"
                 >
+                  <option value="" disabled>Select Quantity</option>
                   {Array.from({ length: 20 }, (_, i) => (i + 1) * 50).map(q => (
                     <option key={q} value={q}>{q} pieces</option>
                   ))}
@@ -132,11 +147,25 @@ const ProductDetail = () => {
             </div>
 
             <div className="pt-2">
-              <WhatsAppButton 
-                phoneNumber={"919876543210"} 
-                message={whatsappMessage}
-                className="w-full py-5 rounded-sm"
-              />
+              {!quantity ? (
+                <button 
+                  onClick={() => setShowError(true)}
+                  className="w-full py-5 rounded-sm inline-flex items-center justify-center bg-brand-dark/20 text-brand-dark/40 text-[11px] tracking-[0.3em] uppercase font-medium cursor-not-allowed transition-colors"
+                >
+                  Enquire on WhatsApp
+                </button>
+              ) : (
+                <WhatsAppButton 
+                  phoneNumber={"919876543210"} 
+                  message={whatsappMessage}
+                  className="w-full py-5 rounded-sm"
+                />
+              )}
+              {showError && !quantity && (
+                <p className="text-red-500 text-[10px] mt-4 tracking-widest uppercase text-center font-medium animate-fade-in">
+                  Please select a quantity
+                </p>
+              )}
               <p className="text-[10px] text-brand-dark/40 mt-6 tracking-widest uppercase text-center font-medium">
                 No payment required at this stage
               </p>

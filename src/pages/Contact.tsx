@@ -1,6 +1,25 @@
-
+import { useState } from 'react';
+import { Copy, Check } from 'lucide-react';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const handleCopy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
+
+  const handleWhatsAppSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const { name, email, message } = formData;
+    const whatsappNumber = "919037061189";
+    const text = `Hi, I am ${name}${email ? ` (${email})` : ''}.\n\n${message}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <div className="min-h-screen pt-32 pb-24 px-6 md:px-12 lg:px-24 max-w-7xl mx-auto">
       <div className="text-center mb-16">
@@ -18,35 +37,61 @@ const Contact = () => {
           <div className="space-y-8">
             <div>
               <h3 className="text-[10px] tracking-[0.2em] uppercase font-semibold mb-2">Email</h3>
-              <a href="mailto:info@ivoryscriptestate.com" className="font-light hover:text-brand-gold transition-colors">info@ivoryscriptestate.com</a>
+              <div className="flex items-center gap-3">
+                <a href="mailto:rahulauh@outlook.com" className="font-light hover:text-brand-gold transition-colors">rahulauh@outlook.com</a>
+                <button onClick={() => handleCopy('rahulauh@outlook.com', 'email')} className="text-brand-dark/50 hover:text-brand-dark transition-colors" title="Copy Email">
+                  {copiedField === 'email' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                </button>
+              </div>
             </div>
             <div>
               <h3 className="text-[10px] tracking-[0.2em] uppercase font-semibold mb-2">Phone</h3>
-              <a href="tel:+919876543210" className="font-light hover:text-brand-gold transition-colors">+91 98765 43210</a>
-            </div>
-            <div>
-              <h3 className="text-[10px] tracking-[0.2em] uppercase font-semibold mb-2">Studio</h3>
-              <p className="font-light text-brand-dark/70">123 Design District<br/>Creative City, 10012</p>
+              <div className="flex items-center gap-3">
+                <a href="tel:+919037061189" className="font-light hover:text-brand-gold transition-colors">+91 90370 61189</a>
+                <button onClick={() => handleCopy('+919037061189', 'phone')} className="text-brand-dark/50 hover:text-brand-dark transition-colors" title="Copy Phone">
+                  {copiedField === 'phone' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
+                </button>
+              </div>
             </div>
           </div>
         </div>
         
         <div>
-          <form className="space-y-8">
+          <form className="space-y-8" onSubmit={handleWhatsAppSubmit}>
             <div>
               <label className="block text-[10px] tracking-[0.2em] uppercase font-semibold mb-2">Name</label>
-              <input type="text" className="w-full border-b border-brand-dark/20 bg-transparent py-2 focus:outline-none focus:border-brand-gold transition-colors" placeholder="Your Name" />
+              <input 
+                type="text" 
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                required
+                className="w-full border-b border-brand-dark/20 bg-transparent py-2 focus:outline-none focus:border-brand-gold transition-colors" 
+                placeholder="Your Name" 
+              />
             </div>
             <div>
               <label className="block text-[10px] tracking-[0.2em] uppercase font-semibold mb-2">Email</label>
-              <input type="email" className="w-full border-b border-brand-dark/20 bg-transparent py-2 focus:outline-none focus:border-brand-gold transition-colors" placeholder="Your Email" />
+              <input 
+                type="email" 
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="w-full border-b border-brand-dark/20 bg-transparent py-2 focus:outline-none focus:border-brand-gold transition-colors" 
+                placeholder="Your Email" 
+              />
             </div>
             <div>
               <label className="block text-[10px] tracking-[0.2em] uppercase font-semibold mb-2">Message</label>
-              <textarea rows={4} className="w-full border-b border-brand-dark/20 bg-transparent py-2 focus:outline-none focus:border-brand-gold transition-colors resize-none" placeholder="How can we help you?"></textarea>
+              <textarea 
+                rows={4} 
+                value={formData.message}
+                onChange={(e) => setFormData({...formData, message: e.target.value})}
+                required
+                className="w-full border-b border-brand-dark/20 bg-transparent py-2 focus:outline-none focus:border-brand-gold transition-colors resize-none" 
+                placeholder="How can we help you?"
+              ></textarea>
             </div>
             <button type="submit" className="bg-brand-dark text-white px-8 py-4 text-[10px] tracking-[0.2em] uppercase hover:bg-brand-gold transition-colors w-full mt-4">
-              Send Message
+              Send Message on WhatsApp
             </button>
           </form>
         </div>
