@@ -71,12 +71,12 @@ const Home = () => {
             {heroSubtext}
           </p>
           <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-3 sm:gap-4">
-            <button className="w-full sm:w-auto bg-brand-dark text-white font-bold text-xs px-8 py-4 uppercase tracking-widest hover:bg-black transition-colors">
-              Buy Product
-            </button>
-            <button className="w-full sm:w-auto bg-white text-brand-dark border border-brand-dark font-bold text-xs px-8 py-4 uppercase tracking-widest hover:bg-gray-50 transition-colors">
-              Explore Product
-            </button>
+            <Link to="/collections" className="w-full sm:w-auto bg-brand-dark text-white font-bold text-xs px-8 py-4 uppercase tracking-widest hover:bg-black transition-colors text-center">
+              View Collections
+            </Link>
+            <Link to="/contact" className="w-full sm:w-auto bg-white text-brand-dark border border-brand-dark font-bold text-xs px-8 py-4 uppercase tracking-widest hover:bg-gray-50 transition-colors text-center">
+              Contact Us
+            </Link>
           </div>
         </div>
         
