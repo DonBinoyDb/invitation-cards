@@ -34,12 +34,8 @@ const Home = () => {
   let displayedCollection: any[] = [];
   if (collectionFilter === 'Featured') {
     displayedCollection = ourCollectionIds.map(id => products.find(p => p.id === id)).filter(Boolean);
-  } else if (collectionFilter === 'Classic') {
-    displayedCollection = products.filter(p => p.title.toLowerCase().match(/classic|antique|gold|vintage/)).slice(0, 4);
-  } else if (collectionFilter === 'Modern') {
-    displayedCollection = products.filter(p => p.title.toLowerCase().match(/modern|black|blue|dark/)).slice(0, 4);
-  } else if (collectionFilter === 'Minimal') {
-    displayedCollection = products.filter(p => p.title.toLowerCase().match(/minimal|white|beige|simple|cream/)).slice(0, 4);
+  } else {
+    displayedCollection = products.filter(p => p.details?.tags?.includes(collectionFilter)).slice(0, 4);
   }
   
   // Fallback if filters return empty
@@ -49,10 +45,8 @@ const Home = () => {
   let displayedArrivals: any[] = [];
   if (arrivalsFilter === 'All') {
     displayedArrivals = newArrivalIds.map(id => products.find(p => p.id === id)).filter(Boolean);
-  } else if (arrivalsFilter === 'Floral') {
-    displayedArrivals = products.filter(p => p.title.toLowerCase().match(/floral|flower|rose|sage/)).slice(0, 8);
-  } else if (arrivalsFilter === 'Geometric') {
-    displayedArrivals = products.filter(p => p.title.toLowerCase().match(/geo|shape|line|square/)).slice(0, 8);
+  } else {
+    displayedArrivals = products.filter(p => p.details?.tags?.includes(arrivalsFilter)).slice(0, 8);
   }
   
   // Fallback if filters return empty
