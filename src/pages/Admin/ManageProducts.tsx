@@ -23,6 +23,7 @@ const ManageProducts = () => {
   const [size, setSize] = useState('Standard');
   const [material, setMaterial] = useState('Premium Cardstock');
   const [includes, setIncludes] = useState('Main card and envelope');
+  const [tags, setTags] = useState<string[]>([]);
 
   // Category Management State
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -39,6 +40,7 @@ const ManageProducts = () => {
     setSize(product.details.size);
     setMaterial(product.details.material);
     setIncludes(product.details.includes);
+    setTags(product.details.tags || []);
     setIsAdding(true);
   };
 
@@ -52,6 +54,7 @@ const ManageProducts = () => {
     setGallery([]);
     setUploadError(null);
     setCategory(categories[0] || 'Wedding');
+    setTags([]);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +135,7 @@ const ManageProducts = () => {
         image,
         gallery: gallery.length > 0 ? gallery : (image ? [image] : []),
         description,
-        details: { size, material, includes }
+        details: { size, material, includes, tags }
       });
     } else {
       const newProduct: Product = {
@@ -143,7 +146,7 @@ const ManageProducts = () => {
         image: image || 'https://images.unsplash.com/photo-1596443686812-2f45229eebc3?q=80&w=600&auto=format&fit=crop',
         gallery: gallery.length > 0 ? gallery : (image ? [image] : ['https://images.unsplash.com/photo-1596443686812-2f45229eebc3?q=80&w=600&auto=format&fit=crop']),
         description,
-        details: { size, material, includes }
+        details: { size, material, includes, tags }
       };
       addProduct(newProduct);
     }
@@ -325,6 +328,28 @@ const ManageProducts = () => {
                     <div className="md:col-span-2">
                       <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1"><FileText size={14} /> Description</label>
                       <textarea required value={description} onChange={e => setDescription(e.target.value)} placeholder="Describe the product details..." className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition-all resize-none" rows={3}></textarea>
+                    </div>
+
+                    <div className="md:col-span-2 pt-4 border-t border-gray-100">
+                      <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3">Tags (Used for Homepage Filtering)</label>
+                      <div className="flex flex-wrap gap-2">
+                        {['Featured', 'Classic', 'Modern', 'Minimal', 'Floral', 'Geometric'].map(tag => (
+                          <button
+                            type="button"
+                            key={tag}
+                            onClick={() => {
+                              if (tags.includes(tag)) {
+                                setTags(tags.filter(t => t !== tag));
+                              } else {
+                                setTags([...tags, tag]);
+                              }
+                            }}
+                            className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-colors border ${tags.includes(tag) ? 'bg-brand-dark text-white border-brand-dark' : 'bg-white text-gray-500 border-gray-200 hover:border-brand-dark'}`}
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
                     <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-gray-100">

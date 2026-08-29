@@ -10,6 +10,7 @@ export interface Product {
     size: string;
     material: string;
     includes: string;
+    tags?: string[];
   };
   featured?: boolean;
   hidden?: boolean;
