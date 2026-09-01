@@ -22,6 +22,7 @@ const ManageLandingPage = () => {
   const [localHeroHeading, setLocalHeroHeading] = useState(heroHeading);
   const [localHeroSubtext, setLocalHeroSubtext] = useState(heroSubtext);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState({ text: '', type: '' });
 
   useEffect(() => {
     setLocalHeroHeading(heroHeading);
@@ -29,10 +30,23 @@ const ManageLandingPage = () => {
   }, [heroHeading, heroSubtext]);
 
   const handleSaveText = async () => {
+    if (!localHeroHeading.trim() || !localHeroSubtext.trim()) {
+      setSaveMessage({ text: 'Heading and subtext cannot be empty.', type: 'error' });
+      setTimeout(() => setSaveMessage({ text: '', type: '' }), 3000);
+      return;
+    }
+
     setIsSaving(true);
-    await setHeroHeading(localHeroHeading);
-    await setHeroSubtext(localHeroSubtext);
-    setIsSaving(false);
+    try {
+      await setHeroHeading(localHeroHeading);
+      await setHeroSubtext(localHeroSubtext);
+      setSaveMessage({ text: 'Landing Page Settings Saved Successfully!', type: 'success' });
+    } catch (error) {
+      setSaveMessage({ text: 'Failed to save. Please try again.', type: 'error' });
+    } finally {
+      setIsSaving(false);
+      setTimeout(() => setSaveMessage({ text: '', type: '' }), 3000);
+    }
   };
 
   const handleAddProduct = () => {
@@ -74,7 +88,12 @@ const ManageLandingPage = () => {
               rows={3}
             />
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end items-center mt-6 gap-4">
+            {saveMessage.text && (
+              <span className={`text-xs font-bold uppercase tracking-wider ${saveMessage.type === 'success' ? 'text-green-600' : 'text-red-500'} animate-fade-in`}>
+                {saveMessage.text}
+              </span>
+            )}
             <button 
               onClick={handleSaveText}
               disabled={isSaving}

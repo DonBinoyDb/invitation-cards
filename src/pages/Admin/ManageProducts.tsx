@@ -11,6 +11,7 @@ const ManageProducts = () => {
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [saveMessage, setSaveMessage] = useState({ text: '', type: '' });
   
   // Form State
   const [title, setTitle] = useState('');
@@ -127,8 +128,15 @@ const ManageProducts = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingProductId) {
-      updateProduct(editingProductId, {
+    if (!title.trim() || !price || !category) {
+      setSaveMessage({ text: 'Please fill out all required fields.', type: 'error' });
+      setTimeout(() => setSaveMessage({ text: '', type: '' }), 3000);
+      return;
+    }
+
+    try {
+      if (editingProductId) {
+        updateProduct(editingProductId, {
         title,
         category,
         price: parseInt(price) || 0,
@@ -151,6 +159,12 @@ const ManageProducts = () => {
       addProduct(newProduct);
     }
     closeForm();
+    setSaveMessage({ text: 'Product Saved Successfully!', type: 'success' });
+    setTimeout(() => setSaveMessage({ text: '', type: '' }), 3000);
+    } catch (err) {
+      setSaveMessage({ text: 'Failed to save product. Please try again.', type: 'error' });
+      setTimeout(() => setSaveMessage({ text: '', type: '' }), 3000);
+    }
   };
 
   const handleAddCategory = (e: React.FormEvent) => {
@@ -165,6 +179,11 @@ const ManageProducts = () => {
 
   return (
     <div className="space-y-8">
+      {saveMessage.text && (
+        <div className={`p-4 rounded-xl shadow-sm border font-bold text-sm flex items-center justify-center animate-fade-in-up ${saveMessage.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
+          {saveMessage.text}
+        </div>
+      )}
       {/* Header Actions */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <div className="relative flex-1 w-full max-w-xl">

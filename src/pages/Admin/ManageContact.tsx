@@ -7,15 +7,30 @@ const ManageContact = () => {
   
   const [localNumber, setLocalNumber] = useState(whatsappNumber);
   const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState({ text: '', type: '' });
 
   useEffect(() => {
     setLocalNumber(whatsappNumber);
   }, [whatsappNumber]);
 
   const handleSave = async () => {
+    const numPart = localNumber.startsWith('91') ? localNumber.slice(2) : localNumber;
+    if (numPart.length !== 10) {
+      setSaveMessage({ text: 'Please enter a valid 10-digit number.', type: 'error' });
+      setTimeout(() => setSaveMessage({ text: '', type: '' }), 3000);
+      return;
+    }
+
     setIsSaving(true);
-    await setWhatsappNumber(localNumber);
-    setIsSaving(false);
+    try {
+      await setWhatsappNumber(localNumber);
+      setSaveMessage({ text: 'Contact Number Saved Successfully!', type: 'success' });
+    } catch (error) {
+      setSaveMessage({ text: 'Failed to save. Please try again.', type: 'error' });
+    } finally {
+      setIsSaving(false);
+      setTimeout(() => setSaveMessage({ text: '', type: '' }), 3000);
+    }
   };
 
   return (
@@ -50,7 +65,12 @@ const ManageContact = () => {
               <br />• The website footer
             </p>
           </div>
-          <div className="flex justify-end mt-6">
+          <div className="flex justify-end items-center mt-6 gap-4">
+            {saveMessage.text && (
+              <span className={`text-xs font-bold uppercase tracking-wider ${saveMessage.type === 'success' ? 'text-green-600' : 'text-red-500'} animate-fade-in`}>
+                {saveMessage.text}
+              </span>
+            )}
             <button 
               onClick={handleSave}
               disabled={isSaving}
