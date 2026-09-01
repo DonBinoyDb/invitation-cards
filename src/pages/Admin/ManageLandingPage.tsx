@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { useProducts } from '../../context/ProductContext';
 import { LayoutTemplate, Type, Plus, Trash2, Library, Sparkles } from 'lucide-react';
@@ -18,6 +18,22 @@ const ManageLandingPage = () => {
   const { productsList } = useProducts();
   const [selectedProduct, setSelectedProduct] = useState('');
   const [targetSection, setTargetSection] = useState<'ourCollection'|'newArrivals'>('ourCollection');
+  
+  const [localHeroHeading, setLocalHeroHeading] = useState(heroHeading);
+  const [localHeroSubtext, setLocalHeroSubtext] = useState(heroSubtext);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setLocalHeroHeading(heroHeading);
+    setLocalHeroSubtext(heroSubtext);
+  }, [heroHeading, heroSubtext]);
+
+  const handleSaveText = async () => {
+    setIsSaving(true);
+    await setHeroHeading(localHeroHeading);
+    await setHeroSubtext(localHeroSubtext);
+    setIsSaving(false);
+  };
 
   const handleAddProduct = () => {
     if (selectedProduct) {
@@ -44,19 +60,28 @@ const ManageLandingPage = () => {
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Main Heading (Use \n for new line)</label>
             <input 
               type="text" 
-              value={heroHeading}
-              onChange={(e) => setHeroHeading(e.target.value)}
+              value={localHeroHeading}
+              onChange={(e) => setLocalHeroHeading(e.target.value)}
               className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition-all font-sans text-lg"
             />
           </div>
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Subtext</label>
             <textarea 
-              value={heroSubtext}
-              onChange={(e) => setHeroSubtext(e.target.value)}
+              value={localHeroSubtext}
+              onChange={(e) => setLocalHeroSubtext(e.target.value)}
               className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition-all font-sans resize-none"
               rows={3}
             />
+          </div>
+          <div className="flex justify-end">
+            <button 
+              onClick={handleSaveText}
+              disabled={isSaving}
+              className="bg-brand-dark text-white font-bold text-xs px-8 py-3 uppercase tracking-widest hover:bg-black transition-colors disabled:opacity-50 rounded-lg shadow-sm"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         </div>
       </div>

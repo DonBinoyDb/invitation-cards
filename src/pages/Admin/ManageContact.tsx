@@ -1,8 +1,22 @@
+import { useState, useEffect } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { Phone } from 'lucide-react';
 
 const ManageContact = () => {
   const { whatsappNumber, setWhatsappNumber } = useCMS();
+  
+  const [localNumber, setLocalNumber] = useState(whatsappNumber);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    setLocalNumber(whatsappNumber);
+  }, [whatsappNumber]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    await setWhatsappNumber(localNumber);
+    setIsSaving(false);
+  };
 
   return (
     <div className="space-y-8 animate-fade-in-up">
@@ -22,8 +36,8 @@ const ManageContact = () => {
               </span>
               <input 
                 type="text" 
-                value={whatsappNumber.startsWith('91') ? whatsappNumber.slice(2) : whatsappNumber}
-                onChange={(e) => setWhatsappNumber('91' + e.target.value.replace(/\D/g, ''))}
+                value={localNumber.startsWith('91') ? localNumber.slice(2) : localNumber}
+                onChange={(e) => setLocalNumber('91' + e.target.value.replace(/\D/g, ''))}
                 className="w-full p-4 bg-gray-50 border border-gray-200 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition-all font-sans text-lg"
                 placeholder="9037061189"
                 maxLength={10}
@@ -35,6 +49,15 @@ const ManageContact = () => {
               <br />• The Contact Us page
               <br />• The website footer
             </p>
+          </div>
+          <div className="flex justify-end mt-6">
+            <button 
+              onClick={handleSave}
+              disabled={isSaving}
+              className="bg-brand-dark text-white font-bold text-xs px-8 py-3 uppercase tracking-widest hover:bg-black transition-colors disabled:opacity-50 rounded-lg shadow-sm"
+            >
+              {isSaving ? 'Saving...' : 'Save Contact Number'}
+            </button>
           </div>
         </div>
       </div>

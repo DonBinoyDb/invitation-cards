@@ -70,7 +70,7 @@ const Home = () => {
       <section className="relative w-full px-4 sm:px-6 md:px-12 pt-28 pb-10 md:pt-32 md:pb-24 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12 bg-white">
         <div className="w-full md:w-1/2 flex flex-col items-start z-10 text-center md:text-left">
           <h1 className="font-sans font-black text-5xl sm:text-6xl md:text-8xl leading-[0.9] tracking-tighter uppercase mb-4 md:mb-6 text-brand-dark w-full whitespace-pre-line">
-            {heroHeading}
+            {heroHeading.replace(/\\n/g, '\n')}
           </h1>
           <p className="text-gray-600 max-w-md mx-auto md:mx-0 mb-8 text-sm md:text-base leading-relaxed">
             {heroSubtext}
