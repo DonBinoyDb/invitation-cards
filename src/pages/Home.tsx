@@ -4,8 +4,19 @@ import ProductCard from '../components/ProductCard';
 import { useProducts } from '../context/ProductContext';
 import { useCMS } from '../context/CMSContext';
 
+const SkeletonProductCard = () => (
+  <div className="w-full relative animate-pulse">
+    <div className="bg-gray-200 rounded-md aspect-[4/5] mb-4 w-full"></div>
+    <div className="text-left">
+      <div className="h-3 bg-gray-200 rounded w-1/3 mb-2"></div>
+      <div className="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+    </div>
+  </div>
+);
+
 const Home = () => {
-  const { productsList } = useProducts();
+  const { productsList, isLoading } = useProducts();
   const products = productsList.filter(p => !p.hidden);
   const { heroHeading, heroSubtext, ourCollectionIds, newArrivalIds } = useCMS();
   const [collectionFilter, setCollectionFilter] = useState('Featured');
@@ -141,11 +152,19 @@ const Home = () => {
             className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 md:grid md:grid-cols-4 md:gap-6"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {displayedCollection.map((product) => (
-              <div key={`col-${product.id}`} className="w-[140px] min-w-[140px] sm:w-[180px] sm:min-w-[180px] md:w-auto md:min-w-0 snap-start flex-none">
-                <ProductCard {...product} />
-              </div>
-            ))}
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, idx) => (
+                <div key={`skel-col-${idx}`} className="w-[140px] min-w-[140px] sm:w-[180px] sm:min-w-[180px] md:w-auto md:min-w-0 snap-start flex-none">
+                  <SkeletonProductCard />
+                </div>
+              ))
+            ) : (
+              displayedCollection.map((product) => (
+                <div key={`col-${product.id}`} className="w-[140px] min-w-[140px] sm:w-[180px] sm:min-w-[180px] md:w-auto md:min-w-0 snap-start flex-none">
+                  <ProductCard {...product} />
+                </div>
+              ))
+            )}
           </div>
       </section>
 
@@ -175,11 +194,19 @@ const Home = () => {
             className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 mb-10 md:grid md:grid-cols-4 md:gap-6 md:pb-0 md:mb-16"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {displayedArrivals.map((product) => (
-              <div key={`arr-${product.id}`} className="w-[140px] min-w-[140px] sm:w-[180px] sm:min-w-[180px] md:w-auto md:min-w-0 snap-start flex-none">
-                <ProductCard {...product} />
-              </div>
-            ))}
+            {isLoading ? (
+              Array.from({ length: 8 }).map((_, idx) => (
+                <div key={`skel-arr-${idx}`} className="w-[140px] min-w-[140px] sm:w-[180px] sm:min-w-[180px] md:w-auto md:min-w-0 snap-start flex-none">
+                  <SkeletonProductCard />
+                </div>
+              ))
+            ) : (
+              displayedArrivals.map((product) => (
+                <div key={`arr-${product.id}`} className="w-[140px] min-w-[140px] sm:w-[180px] sm:min-w-[180px] md:w-auto md:min-w-0 snap-start flex-none">
+                  <ProductCard {...product} />
+                </div>
+              ))
+            )}
           </div>
           
           <div className="text-center">

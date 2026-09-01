@@ -1,7 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useCMS } from '../context/CMSContext';
 
 const Footer = () => {
   const location = useLocation();
+  const { whatsappNumber } = useCMS();
 
   if (location.pathname.startsWith('/admin')) {
     return null;
@@ -40,7 +42,7 @@ const Footer = () => {
             <h4 className="text-[9px] tracking-[0.3em] uppercase text-brand-gold mb-8 font-medium">Connect</h4>
             <ul className="space-y-6 text-[10px] tracking-[0.2em] uppercase text-white/60 font-light">
               <li><a href="mailto:rahulauh@outlook.com" className="hover:text-brand-gold transition-colors duration-300">rahulauh@outlook.com</a></li>
-              <li><a href="tel:+919037061189" className="hover:text-brand-gold transition-colors duration-300">+91 90370 61189</a></li>
+              <li><a href={`tel:+${whatsappNumber}`} className="hover:text-brand-gold transition-colors duration-300">+{whatsappNumber}</a></li>
             </ul>
           </div>
         </div>
