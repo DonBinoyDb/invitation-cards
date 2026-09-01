@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProducts } from '../context/ProductContext';
+import { useCMS } from '../context/CMSContext';
 import WhatsAppButton from '../components/WhatsAppButton';
 import ProductCard from '../components/ProductCard';
 import { Plus, Minus, ChevronLeft } from 'lucide-react';
@@ -26,6 +27,7 @@ const Accordion = ({ title, content }: { title: string, content: string }) => {
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { productsList } = useProducts();
+  const { whatsappNumber } = useCMS();
   const product = productsList.find(p => p.id === id);
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState<number | ''>(50);
@@ -156,7 +158,7 @@ const ProductDetail = () => {
                 </button>
               ) : (
                 <WhatsAppButton 
-                  phoneNumber={"919037061189"} 
+                  phoneNumber={whatsappNumber} 
                   message={whatsappMessage}
                   className="w-full py-5 rounded-sm"
                 />

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Package, MonitorPlay, LogOut, ArrowLeft, Menu, X } from 'lucide-react';
+import { Package, MonitorPlay, LogOut, ArrowLeft, Menu, X, Phone } from 'lucide-react';
 import ManageProducts from './ManageProducts';
 import ManageLandingPage from './ManageLandingPage';
+import ManageContact from './ManageContact';
 
 const AdminDashboard = () => {
   const { user, signOut } = useAuth();
@@ -61,6 +62,9 @@ const AdminDashboard = () => {
           <Link to="/admin/landing" className={navItemClass('/landing')} onClick={() => setIsSidebarOpen(false)}>
             <MonitorPlay size={18} /> Landing Page Content
           </Link>
+          <Link to="/admin/contact" className={navItemClass('/contact')} onClick={() => setIsSidebarOpen(false)}>
+            <Phone size={18} /> Contact Details
+          </Link>
         </nav>
         
         <div className="p-6 border-t border-gray-800">
@@ -90,6 +94,7 @@ const AdminDashboard = () => {
           <h1 className="text-lg lg:text-xl font-bold text-gray-800">
             {location.pathname.includes('/products') ? 'Product Management' : 
              location.pathname.includes('/landing') ? 'Landing Page CMS' : 
+             location.pathname.includes('/contact') ? 'Contact Settings' : 
              'Dashboard Overview'}
           </h1>
         </header>
@@ -101,6 +106,7 @@ const AdminDashboard = () => {
               <Route path="/" element={<Navigate to="/admin/products" replace />} />
               <Route path="/products" element={<ManageProducts />} />
               <Route path="/landing" element={<ManageLandingPage />} />
+              <Route path="/contact" element={<ManageContact />} />
             </Routes>
           </div>
         </div>

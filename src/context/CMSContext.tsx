@@ -10,6 +10,8 @@ interface CMSContextType {
   newArrivalIds: string[];
   addToCollection: (section: 'ourCollection' | 'newArrivals', productId: string) => void;
   removeFromCollection: (section: 'ourCollection' | 'newArrivals', productId: string) => void;
+  whatsappNumber: string;
+  setWhatsappNumber: (num: string) => void;
 }
 
 const defaultHeading = "INVITATIONS\nCRAFTED";
@@ -22,6 +24,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [heroSubtext, setHeroSubtextState] = useState(defaultSubtext);
   const [ourCollectionIds, setOurCollectionIds] = useState<string[]>([]);
   const [newArrivalIds, setNewArrivalIds] = useState<string[]>([]);
+  const [whatsappNumber, setWhatsappNumberState] = useState("919037061189");
 
   useEffect(() => {
     // Load from local storage
@@ -30,6 +33,9 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     const storedSubtext = localStorage.getItem('cms_hero_subtext');
     if (storedSubtext) setHeroSubtextState(storedSubtext);
+
+    const storedNumber = localStorage.getItem('cms_whatsapp_number');
+    if (storedNumber) setWhatsappNumberState(storedNumber);
 
     const storedCollection = localStorage.getItem('cms_our_collection');
     if (storedCollection) {
@@ -56,6 +62,11 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const setHeroSubtext = (text: string) => {
     setHeroSubtextState(text);
     localStorage.setItem('cms_hero_subtext', text);
+  };
+
+  const setWhatsappNumber = (num: string) => {
+    setWhatsappNumberState(num);
+    localStorage.setItem('cms_whatsapp_number', num);
   };
 
   const addToCollection = (section: 'ourCollection' | 'newArrivals', productId: string) => {
@@ -94,7 +105,9 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       ourCollectionIds,
       newArrivalIds,
       addToCollection,
-      removeFromCollection
+      removeFromCollection,
+      whatsappNumber,
+      setWhatsappNumber
     }}>
       {children}
     </CMSContext.Provider>

@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useCMS } from '../context/CMSContext';
 import { Copy, Check } from 'lucide-react';
 
 const Contact = () => {
+  const { whatsappNumber } = useCMS();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
@@ -14,7 +16,6 @@ const Contact = () => {
   const handleWhatsAppSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const { name, email, message } = formData;
-    const whatsappNumber = "919037061189";
     const text = `Hi, I am ${name}${email ? ` (${email})` : ''}.\n\n${message}`;
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
     window.open(whatsappUrl, '_blank');
@@ -47,8 +48,8 @@ const Contact = () => {
             <div>
               <h3 className="text-[10px] tracking-[0.2em] uppercase font-semibold mb-2">Phone</h3>
               <div className="flex items-center gap-3">
-                <a href="tel:+919037061189" className="font-light hover:text-brand-gold transition-colors">+91 90370 61189</a>
-                <button onClick={() => handleCopy('+919037061189', 'phone')} className="text-brand-dark/50 hover:text-brand-dark transition-colors" title="Copy Phone">
+                <a href={`tel:+${whatsappNumber}`} className="font-light hover:text-brand-gold transition-colors">+{whatsappNumber}</a>
+                <button onClick={() => handleCopy(`+${whatsappNumber}`, 'phone')} className="text-brand-dark/50 hover:text-brand-dark transition-colors" title="Copy Phone">
                   {copiedField === 'phone' ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
                 </button>
               </div>
