@@ -46,8 +46,9 @@ const Footer = () => {
         </div>
         
         {/* Bottom */}
-        <div className="flex flex-col items-center justify-center gap-6 text-[9px] tracking-[0.3em] uppercase text-white/30 pt-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-[9px] tracking-[0.3em] uppercase text-white/30 pt-4 w-full">
           <p>&copy; {new Date().getFullYear()} KALYANAKATH. ALL RIGHTS RESERVED.</p>
+          <p>DEVELOPED BY <a href="https://www.asimovx.se/" target="_blank" rel="noopener noreferrer" className="text-brand-gold hover:text-white transition-colors duration-300">ASIMOVX TECHNOLOGIES AB</a></p>
         </div>
       </div>
     </footer>

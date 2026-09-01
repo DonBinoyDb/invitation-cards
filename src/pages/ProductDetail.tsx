@@ -156,7 +156,7 @@ const ProductDetail = () => {
                 </button>
               ) : (
                 <WhatsAppButton 
-                  phoneNumber={"919876543210"} 
+                  phoneNumber={"919037061189"} 
                   message={whatsappMessage}
                   className="w-full py-5 rounded-sm"
                 />
