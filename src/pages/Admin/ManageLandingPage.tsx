@@ -71,12 +71,12 @@ const ManageLandingPage = () => {
         </div>
         <div className="p-8 space-y-6">
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Main Heading (Use \n for new line)</label>
-            <input 
-              type="text" 
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Main Heading (Press Enter for new line)</label>
+            <textarea 
               value={localHeroHeading}
               onChange={(e) => setLocalHeroHeading(e.target.value)}
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition-all font-sans text-lg"
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition-all font-sans text-lg resize-none"
+              rows={2}
             />
           </div>
           <div>

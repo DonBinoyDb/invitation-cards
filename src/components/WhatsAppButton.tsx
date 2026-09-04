@@ -6,7 +6,8 @@ interface WhatsAppButtonProps {
 
 const WhatsAppButton = ({ phoneNumber, message, className = '' }: WhatsAppButtonProps) => {
   const encodedMessage = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+  const sanitizedNumber = phoneNumber.replace(/[^\d+]/g, '');
+  const whatsappUrl = `https://wa.me/${sanitizedNumber}?text=${encodedMessage}`;
 
   return (
     <a 

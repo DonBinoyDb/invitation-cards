@@ -4,22 +4,25 @@ import { useAuth } from '../context/AuthContext';
 import { Lock } from 'lucide-react';
 
 const SignIn = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignIn = (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
 
-    // Strict role-based check for Admin only
-    if (username.toLowerCase() === 'rahul' && password === '123456') {
-      signIn(username, 'admin');
+    try {
+      await signIn(email, password);
       navigate('/admin');
-    } else {
-      setError('Invalid admin credentials.');
+    } catch (err: any) {
+      setError(err.message || 'Invalid admin credentials.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,14 +49,15 @@ const SignIn = () => {
         <form onSubmit={handleSignIn} className="space-y-5">
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-              Username
+              Email Address
             </label>
             <input 
-              type="text" 
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:border-brand-dark focus:ring-2 focus:ring-brand-dark/20 outline-none transition-all"
-              placeholder="Enter admin username"
+              placeholder="Enter admin email"
+              required
             />
           </div>
           
@@ -67,14 +71,16 @@ const SignIn = () => {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-4 bg-gray-50 border border-gray-200 rounded-lg focus:border-brand-dark focus:ring-2 focus:ring-brand-dark/20 outline-none transition-all"
               placeholder="Enter admin password"
+              required
             />
           </div>
 
           <button 
             type="submit"
-            className="w-full bg-brand-dark text-white font-bold text-sm px-6 py-4 uppercase tracking-widest hover:bg-black transition-colors mt-8 rounded-lg shadow-md"
+            disabled={isLoading}
+            className="w-full bg-brand-dark text-white font-bold text-sm px-6 py-4 uppercase tracking-widest hover:bg-black transition-colors mt-8 rounded-lg shadow-md disabled:opacity-50"
           >
-            Authenticate
+            {isLoading ? 'Authenticating...' : 'Authenticate'}
           </button>
         </form>
       </div>

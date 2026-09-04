@@ -8,6 +8,7 @@ import Collections from './pages/Collections';
 import Contact from './pages/Contact';
 import SignIn from './pages/SignIn';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import NotFound from './pages/NotFound';
 import { AuthProvider } from './context/AuthContext';
 import { ProductProvider } from './context/ProductContext';
 import { CMSProvider } from './context/CMSContext';
@@ -29,6 +30,7 @@ function App() {
                   <Route path="/card/:id" element={<ProductDetail />} />
                   <Route path="/signin" element={<SignIn />} />
                   <Route path="/admin/*" element={<AdminDashboard />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
               <Footer />

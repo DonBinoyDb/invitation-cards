@@ -17,7 +17,8 @@ const Contact = () => {
     e.preventDefault();
     const { name, email, message } = formData;
     const text = `Hi, I am ${name}${email ? ` (${email})` : ''}.\n\n${message}`;
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    const sanitizedNumber = whatsappNumber.replace(/[^\d+]/g, '');
+    const whatsappUrl = `https://wa.me/${sanitizedNumber}?text=${encodeURIComponent(text)}`;
     window.open(whatsappUrl, '_blank');
   };
 

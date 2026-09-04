@@ -27,13 +27,18 @@ const Home = () => {
   useEffect(() => {
     const images = products.map(p => p.image).filter(Boolean);
     if (images.length > 0) {
-      const pickRandom = () => images[Math.floor(Math.random() * images.length)];
-      setHeroImage(pickRandom());
+      let currentImage = images[Math.floor(Math.random() * images.length)];
+      setHeroImage(currentImage);
       
       const interval = setInterval(() => {
         setIsFading(true);
         setTimeout(() => {
-          setHeroImage(pickRandom());
+          let nextImage;
+          do {
+            nextImage = images[Math.floor(Math.random() * images.length)];
+          } while (nextImage === currentImage && images.length > 1);
+          currentImage = nextImage;
+          setHeroImage(currentImage);
           setIsFading(false);
         }, 500); // 500ms fade duration
       }, 5000); // Change image every 5 seconds
@@ -44,7 +49,9 @@ const Home = () => {
   // Logic for Our Collection
   let displayedCollection: any[] = [];
   if (collectionFilter === 'Featured') {
-    displayedCollection = ourCollectionIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+    const manualFeatured = ourCollectionIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+    const taggedFeatured = products.filter(p => p.details?.tags?.includes('Featured'));
+    displayedCollection = Array.from(new Set([...manualFeatured, ...taggedFeatured]));
   } else {
     displayedCollection = products.filter(p => p.details?.tags?.includes(collectionFilter)).slice(0, 4);
   }
@@ -55,7 +62,9 @@ const Home = () => {
   // Logic for New Arrivals
   let displayedArrivals: any[] = [];
   if (arrivalsFilter === 'All') {
-    displayedArrivals = newArrivalIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+    const manualArrivals = newArrivalIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+    const taggedArrivals = products.filter(p => p.details?.tags?.includes('New Arrival'));
+    displayedArrivals = Array.from(new Set([...manualArrivals, ...taggedArrivals]));
   } else {
     displayedArrivals = products.filter(p => p.details?.tags?.includes(arrivalsFilter)).slice(0, 8);
   }

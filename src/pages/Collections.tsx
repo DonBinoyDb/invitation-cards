@@ -51,7 +51,8 @@ const Collections = () => {
     }, 50);
   }, []);
 
-  const displayCategories = ['All Categories', ...categories];
+  const activeCategories = categories.filter(c => productsList.some(p => p.category === c && !p.hidden));
+  const displayCategories = ['All Categories', ...activeCategories];
 
   return (
     <div className="bg-white min-h-screen pt-32 pb-32 px-6 md:px-12 font-sans text-brand-dark">

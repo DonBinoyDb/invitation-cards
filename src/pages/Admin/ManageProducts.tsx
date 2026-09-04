@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useProducts } from '../../context/ProductContext';
 import type { Product } from '../../data/products';
 import { products as initialProducts } from '../../data/products';
-import { compressImage } from '../../utils/imageCompressor';
+import { compressImageToBlob } from '../../utils/imageCompressor';
+import { supabase } from '../../lib/supabaseClient';
 import { Plus, X, Upload, Box, DollarSign, Tag, Search, FileText, Package, Eye, EyeOff, Edit, Trash2, Layers, AlertCircle } from 'lucide-react';
 
 const ManageProducts = () => {
@@ -67,14 +68,26 @@ const ManageProducts = () => {
         return;
       }
       try {
-        const compressedDataUrl = await compressImage(file, 1200, 1200, 0.8);
-        setImage(compressedDataUrl);
+        const compressedBlob = await compressImageToBlob(file, 1200, 1200, 0.8);
+        const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}.webp`;
+        
+        const { data, error } = await supabase.storage
+          .from('products')
+          .upload(fileName, compressedBlob, { contentType: 'image/webp' });
+
+        if (error) throw error;
+
+        const { data: publicUrlData } = supabase.storage
+          .from('products')
+          .getPublicUrl(data.path);
+
+        setImage(publicUrlData.publicUrl);
         if (gallery.length === 0) {
-          setGallery([compressedDataUrl]);
+          setGallery([publicUrlData.publicUrl]);
         }
       } catch (error) {
-        console.error("Failed to compress primary image:", error);
-        setUploadError("Failed to process the primary image. Please try a different file.");
+        console.error("Failed to upload primary image:", error);
+        setUploadError("Failed to upload the primary image. Please try a different file.");
       }
     }
   };
@@ -88,14 +101,31 @@ const ManageProducts = () => {
         setUploadError("Some images were skipped because they exceed the 5MB size limit.");
       }
 
-      const compressedImages = await Promise.all(
-        validFiles.map(file => compressImage(file, 1200, 1200, 0.8).catch(err => {
-          console.error("Failed to compress gallery image:", err);
-          return null;
-        }))
+      const uploadedUrls = await Promise.all(
+        validFiles.map(async (file) => {
+          try {
+            const compressedBlob = await compressImageToBlob(file, 1200, 1200, 0.8);
+            const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}.webp`;
+            
+            const { data, error } = await supabase.storage
+              .from('products')
+              .upload(fileName, compressedBlob, { contentType: 'image/webp' });
+              
+            if (error) throw error;
+            
+            const { data: publicUrlData } = supabase.storage
+              .from('products')
+              .getPublicUrl(data.path);
+              
+            return publicUrlData.publicUrl;
+          } catch (err) {
+            console.error("Failed to upload gallery image:", err);
+            return null;
+          }
+        })
       );
       
-      const validImages = compressedImages.filter(img => img !== null) as string[];
+      const validImages = uploadedUrls.filter(url => url !== null) as string[];
       if (validImages.length < validFiles.length) {
         setUploadError(prev => prev ? prev + " Additionally, some images failed to process." : "Some images failed to process. Please try different files.");
       }
@@ -139,7 +169,7 @@ const ManageProducts = () => {
         updateProduct(editingProductId, {
         title,
         category,
-        price: parseInt(price) || 0,
+        price: Math.max(0, parseInt(price) || 0),
         image,
         gallery: gallery.length > 0 ? gallery : (image ? [image] : []),
         description,
@@ -150,7 +180,7 @@ const ManageProducts = () => {
         id: title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now(),
         title,
         category,
-        price: parseInt(price) || 0,
+        price: Math.max(0, parseInt(price) || 0),
         image: image || 'https://images.unsplash.com/photo-1596443686812-2f45229eebc3?q=80&w=600&auto=format&fit=crop',
         gallery: gallery.length > 0 ? gallery : (image ? [image] : ['https://images.unsplash.com/photo-1596443686812-2f45229eebc3?q=80&w=600&auto=format&fit=crop']),
         description,
@@ -331,8 +361,8 @@ const ManageProducts = () => {
                     </div>
                     
                     <div>
-                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1"><DollarSign size={14} /> Price (₹)</label>
-                      <input required type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00" className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition-all" />
+                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center gap-1"><DollarSign size={14} /> Price for 50 pieces (₹)</label>
+                      <input required type="number" min="0" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00" className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark transition-all" />
                     </div>
 
                     <div className="md:col-span-2">
@@ -352,7 +382,7 @@ const ManageProducts = () => {
                     <div className="md:col-span-2 pt-4 border-t border-gray-100">
                       <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-3">Tags (Used for Homepage Filtering)</label>
                       <div className="flex flex-wrap gap-2">
-                        {['Featured', 'Classic', 'Modern', 'Minimal', 'Floral', 'Geometric'].map(tag => (
+                        {['Featured', 'New Arrival', 'Classic', 'Modern', 'Minimal', 'Floral', 'Geometric'].map(tag => (
                           <button
                             type="button"
                             key={tag}
@@ -443,11 +473,19 @@ const ManageProducts = () => {
                     {product.hidden ? <EyeOff size={14} /> : <Eye size={14} />}
                   </button>
                   
-                  {!initialProducts.some(p => p.id === product.id) && (
+                  {!initialProducts.some(p => p.id === product.id) ? (
                     <button 
                       onClick={(e) => handleDeleteClick(e, product.id)}
                       className="p-2 rounded-full shadow-md backdrop-blur-sm transition-all bg-white/90 text-red-500 hover:text-white hover:bg-red-500"
                       title="Delete Product"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  ) : (
+                    <button 
+                      disabled
+                      className="p-2 rounded-full shadow-md backdrop-blur-sm transition-all bg-white/90 text-gray-300 cursor-not-allowed"
+                      title="Base catalog products cannot be deleted. You can hide them instead."
                     >
                       <Trash2 size={14} />
                     </button>

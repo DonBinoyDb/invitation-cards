@@ -179,13 +179,23 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const removeCategory = async (category: string) => {
+    const remainingCategories = categories.filter(c => c !== category);
+    const fallbackCategory = remainingCategories.length > 0 ? remainingCategories[0] : 'Uncategorized';
+
     // Optimistic UI update
-    setCategories(prev => prev.filter(c => c !== category));
+    setCategories(remainingCategories);
+    setProductsList(prev => prev.map(p => 
+      p.category === category ? { ...p, category: fallbackCategory } : p
+    ));
+
+    // Update products in DB first
+    await supabase.from('products').update({ category: fallbackCategory }).eq('category', category);
 
     const { error } = await supabase.from('categories').delete().eq('name', category);
     if (error) {
       console.error("Failed to remove category", error);
       await fetchCategories(); // Revert on failure
+      await fetchProducts();
     }
   };
 
